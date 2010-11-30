@@ -3,6 +3,7 @@
  * Navigation Grid
  * A OSX/Spaces-like navigable grid.
  *
+ * @version 0.1.0
  * @author Jon Ferrer <jon.ferrer@mlb.com>
  */
 
@@ -10,14 +11,16 @@ var Nav_Grid = (function() {
     var Nav_Grid;
     
     /**
-     * description
+     * Renders DOM representation of Nav_Grid, it's viewport and child panels
+     * inside of the Nav_Grid instance's DOM container element.
      *
-     * @param {Array} grid_map 
-     * @member Nav_Grid
+     * @methodOf Nav_Grid
      * @private
+     * @param {Array} grid_map 
      * @return void
      */
-    function draw_grid(grid_map) {
+    function draw_grid(grid_map) 
+    {
         var r, c;
 
         this.el.className = "navgrid-viewport";
@@ -43,6 +46,29 @@ var Nav_Grid = (function() {
         }
 
         this.el.appendChild(this.panel_container);
+    }
+
+    /**
+     * Moves grid panels container so that the current panel is visible in
+     * the Nav_Grid viewport.
+     *
+     * @return void
+     */
+    function show_current_panel() 
+    {
+       var new_left = this.config.panel_config.w * this.curr_position_coor.x,
+           new_top = this.config.panel_config.h * this.curr_position_coor.y;
+
+       if(new_left > 0) {
+            new_left = new_left * -1;
+       }
+       if(new_top > 0) {
+            new_top = new_top * -1;
+       }
+
+       console.log("move to:", new_left, new_top);
+       this.panel_container.style.left = new_left + "px";
+       this.panel_container.style.top = new_top + "px";
     }
 
     /**
@@ -99,8 +125,7 @@ var Nav_Grid = (function() {
 
         // draw grid
         draw_grid.call(this, grid_map);
-
-        this.show_panel();
+        show_current_panel.call(this);
     };
 
 
@@ -108,6 +133,9 @@ var Nav_Grid = (function() {
     {
         "add_component" : function() {},
 
+        /**
+         * Sets current panel
+         */
         "move" : function(step, grid_map) {
             var new_x = this.curr_position_coor.x + step.x,
                 new_y = this.curr_position_coor.y + step.y;
@@ -136,26 +164,10 @@ var Nav_Grid = (function() {
 
             console.log(this.curr_position);
 
-            this.show_panel();
+            show_current_panel.call(this);
 
-        },
-
-        "show_panel" : function()
-        {
-           var new_left = this.config.panel_config.w * this.curr_position_coor.x,
-               new_top = this.config.panel_config.h * this.curr_position_coor.y;
-
-           if(new_left > 0) {
-                new_left = new_left * -1;
-           }
-           if(new_top > 0) {
-                new_top = new_top * -1;
-           }
-
-           console.log("move to:", new_left, new_top);
-           this.panel_container.style.left = new_left + "px";
-           this.panel_container.style.top = new_top + "px";
         }
+
     };
 
     return Nav_Grid;
