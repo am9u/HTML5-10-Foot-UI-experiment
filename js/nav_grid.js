@@ -1,3 +1,10 @@
+/**
+ * @fileOverview
+ * Navigation Grid
+ * A OSX/Spaces-like navigable grid.
+ *
+ * @author Jon Ferrer <jon.ferrer@mlb.com>
+ */
 
 var Nav_Grid = (function() {
     var Nav_Grid;
@@ -57,12 +64,6 @@ var Nav_Grid = (function() {
 
         this.config = config;
 
-        // bounce
-        this.bounce_x = 0;
-        this.bounce_y = 0;
-        this.bounce_dist_x = Math.round(this.config.panel_config.w / 4); // bounce distance is 1/4 size of panel
-        this.bounce_dist_y = Math.round(this.config.panel_config.h / 4);
-
         this.rows = config.rows;
         this.cols = config.cols;
         this.dimensions = this.cols + "x" + this.rows;    
@@ -71,6 +72,7 @@ var Nav_Grid = (function() {
 
 
         for(r = 0; r < this.rows; r++)
+
         {
             row = [];
             for(c = 0; c < this.cols; c++)
@@ -114,23 +116,19 @@ var Nav_Grid = (function() {
             if(new_x < 0)
             {
                 new_x    = 0;
-                this.bounce_x = 1;
             }
             else if(new_x >= this.cols)
             {
                 new_x = this.cols - 1;
-                this.bounce_x = 1;
             }
 
             if(new_y < 0)
             {
                 new_y = 0;
-                this.bounce_y = 1;
             }
             else if(new_y >= this.rows)
             {
                 new_y = this.rows - 1;
-                this.bounce_y = 1;
             }
 
             this.curr_position_coor = { "x" : new_x, "y" : new_y };
@@ -147,32 +145,11 @@ var Nav_Grid = (function() {
            var new_left = this.config.panel_config.w * this.curr_position_coor.x,
                new_top = this.config.panel_config.h * this.curr_position_coor.y;
 
-           if(this.bounce_x > 0 && this.curr_position_coor.x > 0) {
-                new_left = new_left + (this.bounce_x * this.bounce_dist_x);
-                this.bounce_x = 0;
-                console.log("bounce on x-axis. new_left=", new_left);
-           }
-           if(this.bounce_y > 0 && this.curr_position_coor.y > 0) {
-                new_top = new_top + (this.bounce_y * this.bounce_dist_y);
-                this.bounce_y = 0;
-                console.log("bounce on y-axis. new_top=", new_top);
-           }
            if(new_left > 0) {
                 new_left = new_left * -1;
            }
            if(new_top > 0) {
                 new_top = new_top * -1;
-           }
-
-           if(this.bounce_x > 0 && this.curr_position_coor.x === 0) {
-                new_left = new_left + (this.bounce_x * this.bounce_dist_x);
-                this.bounce_x = 0;
-                console.log("neg bounce on x-axis. new_left=", new_left);
-           }
-           if(this.bounce_y > 0 && this.curr_position_coor.y === 0) {
-                new_top = new_top + (this.bounce_y * this.bounce_dist_y);
-                this.bounce_y = 0;
-                console.log("neg bounce on y-axis. new_top=", new_top);
            }
 
            console.log("move to:", new_left, new_top);
