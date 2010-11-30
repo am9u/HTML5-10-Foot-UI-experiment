@@ -1,3 +1,9 @@
+/**
+ * @fileOverview 
+ * Bounceable Nav Grid
+ * The grid "bounces" when a user attempts to navigate past a boundary of the grid.
+ *
+ */
 
 var Nav_Grid = (function() {
     var Nav_Grid;
